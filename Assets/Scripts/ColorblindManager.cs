@@ -2,40 +2,34 @@ using UnityEngine;
 
 public enum VisionMode 
 { 
-    Normal,         // Standard vision
-    Protanopia,     // Red-blind
-    Deuteranopia,   // Green-blind
-    Tritanopia      // Blue-blind
+    Normal = 0,
+    Protanopia = 1,
+    Deuteranopia = 2,
+    Tritanopia = 3
 }
 
-public class ColorblindManager : MonoBehaviour
+public class ColorblindManagerURP : MonoBehaviour
 {
-    public VisionMode currentMode = VisionMode.Normal;
+    [Tooltip("Drop the Material using your Colorblind Shader here")]
     public Material colorblindMaterial; 
 
-    public void SetVisionMode(int modeIndex)
+    void Start()
     {
-        currentMode = (VisionMode)modeIndex;
-        UpdateShader();
+        // Ensure the game starts in Normal vision mode
+        SetVisionMode(0); 
     }
 
-    private void UpdateShader()
+    // Link your UI Buttons to this method (Pass 0, 1, 2, or 3)
+    public void SetVisionMode(int modeIndex)
     {
         if (colorblindMaterial != null)
         {
-            colorblindMaterial.SetInt("_VisionMode", (int)currentMode);
-        }
-    }
-
-    void OnRenderImage(RenderTexture source, RenderTexture destination)
-    {
-        if (currentMode == VisionMode.Normal || colorblindMaterial == null)
-        {
-            Graphics.Blit(source, destination);
+            // _VisionMode must exactly match the property Reference name in your Shader Graph
+            colorblindMaterial.SetInt("_VisionMode", modeIndex);
         }
         else
         {
-            Graphics.Blit(source, destination, colorblindMaterial);
+            Debug.LogWarning("Colorblind Material is not assigned in the Inspector!");
         }
     }
 }
