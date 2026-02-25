@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 3
   tags:
   - canPickUp
+  - lemon
+  - lime
+  - orange
   layers:
   - Default
   - TransparentFX
